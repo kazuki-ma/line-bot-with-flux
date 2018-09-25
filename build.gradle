@@ -1,0 +1,71 @@
+/*
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+// ./gradlew clean && ./gradlew uploadArchives -Prelease
+
+buildscript {
+    ext.kotlin_version = '1.2.70'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.3'
+        classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE'
+        classpath 'io.spring.gradle:propdeps-plugin:0.0.10.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.15.RELEASE'
+        classpath 'io.franzbecker:gradle-lombok:1.14'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.puppycrawl.tools:checkstyle:8.12'
+    }
+}
+
+repositories {
+    mavenCentral();
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext['guava.version'] = '26.0-jre'
+ext['okhttp3.version'] = '3.11.0'
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.spring.platform:platform-bom:Cairo-SR4'
+    }
+}
+
+dependencies {
+    compile group: 'com.linecorp.bot', name: 'line-bot-spring-boot', version: '2.1.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+}
+
+lombok {
+    version = '1.18.2'
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:all' << '-Xlint:deprecation' << '-Werror' << '-Xlint:-processing' << '-parameters'
+}

@@ -44,6 +44,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'io.franzbecker.gradle-lombok'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
